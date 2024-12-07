@@ -20,7 +20,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(name, task.name) && Objects.equals(description, task.description) && status == task.status && id==task.id;
+        return Objects.equals(name, task.name) && Objects.equals(description, task.description) && status == task.status && id == task.id;
     }
 
     @Override
@@ -42,5 +42,23 @@ public class Task {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                '}';
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
