@@ -45,22 +45,7 @@ public class Main {
 
 
 
-////        System.out.println(taskManager.getTasksList().toString());
-////        System.out.println("-----------------------------------");
-//        System.out.println(taskManager.getEpicsList().toString());
-////        System.out.println("-----------------------------------");
-//        System.out.println(taskManager.getSubTasksListFromEpic(epic).toString());
-//       //  Subtask subtask22 = new Subtask("subtask update","open the color",TaskStatus.DONE,epic);
-//        Task subtask22 = taskManager.getTaskFromId(3);
-//        subtask22.setStatus(TaskStatus.DONE);
-//        taskManager.addEpicSubTask(epic,(Subtask) subtask22);
-//        System.out.println("-----------------------------------");
-//        System.out.println(taskManager.getSubTasksListFromEpic(epic).toString());
-////        System.out.println("++++++++++++");
-//        System.out.println(taskManager.getEpicsList().toString());
-////        taskManager.romoveTaskFromId(subtask22.getId());
-////        System.out.println("//////");
-////        System.out.println(taskManager.getEpicsList().toString());
+
 
     }
 }
