@@ -1,9 +1,14 @@
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String[] args) {
 
+
+
+
     //test
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
         System.out.println("---------- test task start---------------");
         Task task = new Task("fist task","paint green button",TaskStatus.NEW);
@@ -43,7 +48,12 @@ public class Main {
         System.out.println("---------- test epic end---------------");
 
 
-
+        ArrayList<Task> historyList= taskManager.historyManager.getHistory();
+        System.out.println(historyList);
+        taskManager.getTaskFromId(0);
+        taskManager.getTaskFromId(3);
+        historyList= taskManager.historyManager.getHistory();
+        System.out.println(historyList);
 
 
 
