@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -48,7 +49,7 @@ public class Main {
         System.out.println("---------- test epic end---------------");
 
 
-        ArrayList<Task> historyList= taskManager.historyManager.getHistory();
+        List<Task> historyList= taskManager.historyManager.getHistory();
         System.out.println(historyList);
         taskManager.getTaskFromId(0);
         taskManager.getTaskFromId(3);

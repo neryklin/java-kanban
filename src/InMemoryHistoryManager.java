@@ -1,7 +1,8 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager{
-    ArrayList<Task> historyVeiwList = new ArrayList<>();
+    List<Task> historyVeiwList = new ArrayList<>();
 
     public void add(Task task){
         if(historyVeiwList.size()==10) {
@@ -11,7 +12,7 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return historyVeiwList;
     }
 }
