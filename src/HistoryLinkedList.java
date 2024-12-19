@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class HistoryLinkedList<E> {
     public Node<E> first;
