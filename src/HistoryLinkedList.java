@@ -34,17 +34,17 @@ public class HistoryLinkedList<E> {
     }
 
     public boolean isEmpty() {
-        return  size==0 ? true : false;
+        return size == 0 ? true : false;
     }
 
-    public ArrayList<Task> getTasks(){
+    public ArrayList<Task> getTasks() {
         ArrayList<Task> listHistoryTask = new ArrayList<>();
-        if (size==0) {
+        if (size == 0) {
             return listHistoryTask;
         }
         listHistoryTask.add((Task) first.item);
         Node<E> element = first.next;
-        while (element!=null) {
+        while (element != null) {
             listHistoryTask.add((Task) element.item);
             element = element.next;
         }
@@ -54,17 +54,17 @@ public class HistoryLinkedList<E> {
     public void remove(Node<E> e) {
         final Node<E> next = e.next;
         final Node<E> prev = e.prev;
-        if (prev==null) {
-            first=next;
-        } else{
+        if (prev == null) {
+            first = next;
+        } else {
             prev.next = next;
-            e.prev=null;
+            e.prev = null;
         }
-        if (next==null) {
+        if (next == null) {
             last = prev;
-        }else{
+        } else {
             next.prev = prev;
-            e.next=null;
+            e.next = null;
         }
         e.item = null;
         size--;

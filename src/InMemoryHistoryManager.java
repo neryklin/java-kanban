@@ -1,8 +1,8 @@
 import java.util.*;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
     HistoryLinkedList<Task> historyVeiwList = new HistoryLinkedList<Task>();
-    Map<Integer,Node> mapSearchNodeFromList = new HashMap<>();
+    Map<Integer, Node> mapSearchNodeFromList = new HashMap<>();
 
 
     @Override
@@ -30,11 +30,11 @@ public class InMemoryHistoryManager implements HistoryManager{
         historyVeiwList.clear();
     }
 
-    public void removeNode(Node<Task> node){
+    public void removeNode(Node<Task> node) {
         historyVeiwList.remove(node);
     }
 
-    public void add(Task task){
+    public void add(Task task) {
         remove(task.getId());
         historyVeiwList.add(task);
         mapSearchNodeFromList.put(task.getId(), historyVeiwList.last);
@@ -44,8 +44,6 @@ public class InMemoryHistoryManager implements HistoryManager{
     public List<Task> getHistory() {
         return historyVeiwList.getTasks();
     }
-
-
 
 
 }

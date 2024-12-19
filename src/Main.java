@@ -6,17 +6,12 @@ public class Main {
     public static void main(String[] args) {
 
 
-
-
-
-
-
-    //test
+        //test
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
         System.out.println("---------- test task start---------------");
-        Task task = new Task("fist task","paint green button",TaskStatus.NEW);
-        Task task2 = new Task("second  task","paint red button",TaskStatus.NEW);
+        Task task = new Task("fist task", "paint green button", TaskStatus.NEW);
+        Task task2 = new Task("second  task", "paint red button", TaskStatus.NEW);
         taskManager.addTask(task);
         taskManager.addTask(task2);
         System.out.println(taskManager.getTasksList().toString());
@@ -30,16 +25,16 @@ public class Main {
         System.out.println("---------- test task end ---------------");
 
         System.out.println("---------- test epic start---------------");
-        Epic epic = new Epic("fist epic","epic green button",TaskStatus.NEW);
-        Subtask subtask = new Subtask("subtask 1","open the color",TaskStatus.NEW,epic);
-        Subtask subtask2 = new Subtask("subtask 2","get brush",TaskStatus.NEW,epic);
-        Subtask subtask3 = new Subtask("subtask 3","paint the button",TaskStatus.NEW,epic);
-        Epic epic2 = new Epic("second  epic","epic red button",TaskStatus.NEW);
-        Epic epic3 = new Epic("third  epic","third",TaskStatus.NEW);
-        Subtask subtask4 = new Subtask("subtask 4","TEST 2",TaskStatus.NEW);
+        Epic epic = new Epic("fist epic", "epic green button", TaskStatus.NEW);
+        Subtask subtask = new Subtask("subtask 1", "open the color", TaskStatus.NEW, epic);
+        Subtask subtask2 = new Subtask("subtask 2", "get brush", TaskStatus.NEW, epic);
+        Subtask subtask3 = new Subtask("subtask 3", "paint the button", TaskStatus.NEW, epic);
+        Epic epic2 = new Epic("second  epic", "epic red button", TaskStatus.NEW);
+        Epic epic3 = new Epic("third  epic", "third", TaskStatus.NEW);
+        Subtask subtask4 = new Subtask("subtask 4", "TEST 2", TaskStatus.NEW);
         System.out.println("---------- list epic--------------");
 
-        taskManager.addEpicSubTask(epic3,subtask4);
+        taskManager.addEpicSubTask(epic3, subtask4);
 
         taskManager.addEpic(epic);
         taskManager.addEpic(epic2);
@@ -54,15 +49,15 @@ public class Main {
 
         //Дополнительное задание. Реализуем пользовательский сценарий
         System.out.println("---------- test history---------------");
-        List<Task> historyList= taskManager.historyManager.getHistory();
+        List<Task> historyList = taskManager.historyManager.getHistory();
         System.out.println(historyList);
 
 
-        Epic epic5 = new Epic(" epic 5","epic green button",TaskStatus.NEW);
-        Subtask subtask5 = new Subtask("subtask 5","open the color",TaskStatus.NEW,epic5);
-        Subtask subtask6 = new Subtask("subtask 6","get brush",TaskStatus.NEW,epic5);
-        Subtask subtask7 = new Subtask("subtask 7","paint the button",TaskStatus.NEW,epic5);
-        Epic epic6 = new Epic("epic 6","epic red button",TaskStatus.NEW);
+        Epic epic5 = new Epic(" epic 5", "epic green button", TaskStatus.NEW);
+        Subtask subtask5 = new Subtask("subtask 5", "open the color", TaskStatus.NEW, epic5);
+        Subtask subtask6 = new Subtask("subtask 6", "get brush", TaskStatus.NEW, epic5);
+        Subtask subtask7 = new Subtask("subtask 7", "paint the button", TaskStatus.NEW, epic5);
+        Epic epic6 = new Epic("epic 6", "epic red button", TaskStatus.NEW);
         taskManager.addEpic(epic5);
         taskManager.addEpic(epic6);
         taskManager.getTaskFromId(epic5.getId());
@@ -70,20 +65,18 @@ public class Main {
         taskManager.getTaskFromId(subtask5.getId());
         taskManager.getTaskFromId(subtask7.getId());
         taskManager.getTaskFromId(subtask6.getId());
-        historyList= taskManager.historyManager.getHistory();
+        historyList = taskManager.historyManager.getHistory();
         System.out.println(historyList);
         taskManager.getTaskFromId(epic5.getId());
         taskManager.getTaskFromId(subtask5.getId());
-        historyList= taskManager.historyManager.getHistory();
+        historyList = taskManager.historyManager.getHistory();
         System.out.println(historyList);
         taskManager.removeTaskFromId(subtask6.getId());
-        historyList= taskManager.historyManager.getHistory();
+        historyList = taskManager.historyManager.getHistory();
         System.out.println(historyList);
         taskManager.removeTaskFromId(epic5.getId());
-        historyList= taskManager.historyManager.getHistory();
+        historyList = taskManager.historyManager.getHistory();
         System.out.println(historyList);
-
-
 
 
     }

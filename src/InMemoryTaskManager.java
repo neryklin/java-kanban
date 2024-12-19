@@ -9,7 +9,6 @@ public class InMemoryTaskManager implements TaskManager {
     HistoryManager historyManager = Managers.getDefaultHistory();
 
 
-
     @Override
     public void addTask(Task task) {
         tasks.put(task.getId(), task);
@@ -132,7 +131,6 @@ public class InMemoryTaskManager implements TaskManager {
         historyManager.remove(id);
         return null;
     }
-
 
 
 }
