@@ -10,7 +10,7 @@ class InMemoryTaskManagerTest {
     void addTask() {
         Task task = new Task("fist task","paint green button",TaskStatus.NEW);
         Task task2 = new Task("second  task","paint red button",TaskStatus.NEW);
-        InMemoryTaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
         taskManager.addTask(task);
         taskManager.addTask(task2);
         assertEquals(taskManager.getTasksList().size(),2,"Не все задачи добавлены в TaskList");
@@ -19,7 +19,7 @@ class InMemoryTaskManagerTest {
     @Test
     void updateTask() {
         Task task = new Task("fist task","paint green button",TaskStatus.NEW);
-        InMemoryTaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
         taskManager.addTask(task);
 
         HashMap<Integer, Task> tasksList= taskManager.getTasksList();
@@ -42,7 +42,7 @@ class InMemoryTaskManagerTest {
     @Test
     void newTaskAddAndCheck() {
         Task task = new Task("fist task","paint green button",TaskStatus.NEW);
-        InMemoryTaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
         taskManager.addTask(task);
         Task taskFind = taskManager.getTaskFromId(task.getId());
         assertEquals(task.getId(),taskFind.getId(), "task при сохранении ломается");
@@ -57,7 +57,7 @@ class InMemoryTaskManagerTest {
     void removeAllTask() {
         Task task = new Task("fist task","paint green button",TaskStatus.NEW);
         Task task2 = new Task("second  task","paint red button",TaskStatus.NEW);
-        InMemoryTaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
         taskManager.addTask(task);
         taskManager.addTask(task2);
         taskManager.removeAllTask();
@@ -67,7 +67,7 @@ class InMemoryTaskManagerTest {
     @Test
     void getTaskFromId() {
         Task task = new Task("fist task","paint green button",TaskStatus.NEW);
-        InMemoryTaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
         taskManager.addTask(task);
         Task taskFind = taskManager.getTaskFromId(task.getId());
         assertEquals(taskFind,task,"Не коррекртно найден таск по id");
@@ -77,7 +77,7 @@ class InMemoryTaskManagerTest {
     void removeTaskFromId() {
         Task task = new Task("fist task","paint green button",TaskStatus.NEW);
         Task task2 = new Task("second  task","paint red button",TaskStatus.NEW);
-        InMemoryTaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
         taskManager.addTask(task);
         taskManager.addTask(task2);
         int idTask = task.getId();

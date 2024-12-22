@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Task {
+public class Task implements Serializable {
     private String name;
     private static int countId = 0;
     private int id;
