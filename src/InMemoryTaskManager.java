@@ -1,7 +1,6 @@
-import java.io.Serializable;
 import java.util.HashMap;
 
-public class InMemoryTaskManager implements TaskManager, Serializable {
+public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Task> tasks = new HashMap<>();
     HashMap<Integer, Epic> epics = new HashMap<>();
 

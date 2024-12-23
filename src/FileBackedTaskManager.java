@@ -1,37 +1,63 @@
 import java.io.*;
-import java.util.HashMap;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager{
-final String pathToSave;
+
+public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+    final String pathTo;
 
     public FileBackedTaskManager(String pathToSave) {
-        this.pathToSave = pathToSave;
+        this.pathTo = pathToSave;
     }
 
-    public  void load(){
-        try (
-                FileInputStream fileInputStream = new FileInputStream(pathToSave);
-                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);) {
-             this.tasks = (HashMap) objectInputStream.readObject();
-        } catch (IOException e) {
-//            throw new ManagerSaveException(e.getMessage());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+    public void load() {
+        int maxIndexTast = 0;
+        try (FileReader fileReader = new FileReader(pathTo); BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+            String[] str = new String[6];
+            while (bufferedReader.ready()) {
+                str = bufferedReader.readLine().split(",");
+                if (str[1].equals("class Task")) {
+                    Task task = new Task(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4]);
+                    tasks.put(task.getId(), task);
+                    maxIndexTast = Integer.max(maxIndexTast, task.getId());
+                } else if (str[1].equals("class Epic")) {
+                    Epic epic = new Epic(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4]);
+                    epics.put(epic.getId(), epic);
+                    maxIndexTast = Integer.max(maxIndexTast, epic.getId());
+                } else if (str[1].equals("class Subtask")) {
+                    Subtask subtask = new Subtask(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4], epics.get(Integer.parseInt(str[5])));
+                    maxIndexTast = Integer.max(maxIndexTast, subtask.getId());
+                }
+
+            }
+
+            Task.setCountId(++maxIndexTast);
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getMessage();
         }
     }
+
 
     public void save() {
-        try (
-        FileOutputStream outputStream = new FileOutputStream(pathToSave);
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Integer i : tasks.keySet()) {
+            stringBuilder.append(tasks.get(i).prepareToSave() + "\n");
+        }
+        for (Integer i : epics.keySet()) {
+            stringBuilder.append(epics.get(i).prepareToSave() + "\n");
+            var sublist = epics.get(i).subTaskList;
+            for (Integer j : sublist.keySet()) {
+                stringBuilder.append(sublist.get(j).prepareToSave() + "\n");
+            }
+        }
 
-            objectOutputStream.writeObject(this.tasks);
+        try (FileWriter fileWriter = new FileWriter(pathTo); BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+            bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
-//            throw new ManagerSaveException(e.getMessage());
+            throw new ManagerSaveException(e.getMessage());
         }
     }
 
-    public class ManagerSaveException extends RuntimeException{
+    public class ManagerSaveException extends RuntimeException {
 
         public ManagerSaveException() {
         }
@@ -40,6 +66,7 @@ final String pathToSave;
             super(message);
         }
     }
+
     @Override
     public void addTask(Task task) {
         super.addTask(task);
@@ -82,6 +109,6 @@ final String pathToSave;
         super.removeTaskFromId(id);
         save();
         return super.removeTaskFromId(id);
-      //  save();
+        //  save();
     }
 }

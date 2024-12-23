@@ -1,7 +1,6 @@
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Task implements Serializable {
+public class Task {
     private String name;
     private static int countId = 0;
     private int id;
@@ -14,6 +13,17 @@ public class Task implements Serializable {
         Task.countId++;
         this.description = description;
         this.status = status;
+    }
+
+    public Task(int id, String name, TaskStatus status, String description) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+    }
+
+    public static void setCountId(int countId) {
+        Task.countId = countId;
     }
 
     @Override
@@ -65,6 +75,12 @@ public class Task implements Serializable {
                 ", description='" + description + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+
+    public String prepareToSave() {
+        String sep = ",";
+        return id + sep + this.getClass() + sep + name + sep + status + sep + description + sep;
     }
 
     public void setId(int id) {

@@ -1,4 +1,3 @@
-
 import java.util.HashMap;
 
 public class Epic extends Task {
@@ -16,4 +15,12 @@ public class Epic extends Task {
         super(name, description, status);
     }
 
+    public Epic(int id, String name, TaskStatus status, String description) {
+        super(id, name, status, description);
+    }
+
+    public String prepareToSave() {
+        String sep = ",";
+        return this.getId() + sep + this.getClass() + sep + this.getName() + sep + this.getStatus() + sep + this.getDescription();
+    }
 }
