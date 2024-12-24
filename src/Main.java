@@ -6,13 +6,17 @@ public class Main {
 
 
         //test
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        FileBackedTaskManager taskManager = Managers.getDefault();
 
+
+         System.out.println("---------- loaded---------------");
         System.out.println("---------- test task start---------------");
         Task task = new Task("fist task", "paint green button", TaskStatus.NEW);
         Task task2 = new Task("second  task", "paint red button", TaskStatus.NEW);
         taskManager.addTask(task);
         taskManager.addTask(task2);
+
+
         System.out.println(taskManager.getTasksList().toString());
         task2.setName("new fist task");
         task2.setStatus(TaskStatus.IN_PROGRESS);
@@ -77,6 +81,13 @@ public class Main {
         historyList = taskManager.historyManager.getHistory();
         System.out.println(historyList);
 
+        //Дополнительное задание. Реализуем пользовательский сценарий
+        // Дополнительное задание. Реализуем пользовательский сценарий
+        //Дополнительное задание. Реализуем пользовательский сценарий
+        System.out.println("---------- test load---------------");
+        FileBackedTaskManager taskManager2 = Managers.getDefault();
+        taskManager2.load();
+        System.out.println("---------- final---------------");
 
     }
 }

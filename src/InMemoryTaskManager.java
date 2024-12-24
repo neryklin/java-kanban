@@ -109,7 +109,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task removeTaskFromId(int id) {
+    public void removeTaskFromId(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
         } else if (epics.containsKey(id)) {
@@ -127,7 +127,6 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         historyManager.remove(id);
-        return null;
     }
 
 

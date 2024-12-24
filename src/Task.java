@@ -15,6 +15,17 @@ public class Task {
         this.status = status;
     }
 
+    public Task(int id, String name, TaskStatus status, String description) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+    }
+
+    public static void setCountId(int countId) {
+        Task.countId = countId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -64,6 +75,12 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+
+    public String prepareToSave() {
+        String sep = ",";
+        return id + sep + this.getClass() + sep + name + sep + status + sep + description + sep;
     }
 
     public void setId(int id) {
