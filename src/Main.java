@@ -9,7 +9,7 @@ public class Main {
         FileBackedTaskManager taskManager = Managers.getDefault();
 
 
-        // System.out.println("---------- loaded---------------");
+         System.out.println("---------- loaded---------------");
         System.out.println("---------- test task start---------------");
         Task task = new Task("fist task", "paint green button", TaskStatus.NEW);
         Task task2 = new Task("second  task", "paint red button", TaskStatus.NEW);

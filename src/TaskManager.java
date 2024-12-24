@@ -24,7 +24,7 @@ public interface TaskManager {
     Task getTaskFromId(int id);
 
 
-    Task removeTaskFromId(int id);
+    void removeTaskFromId(int id);
 
 
 }

@@ -57,15 +57,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public class ManagerSaveException extends RuntimeException {
-
-        public ManagerSaveException() {
-        }
-
-        public ManagerSaveException(String message) {
-            super(message);
-        }
-    }
 
     @Override
     public void addTask(Task task) {
@@ -104,11 +95,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public Task removeTaskFromId(int id) {
-
+    public void removeTaskFromId(int id) {
         super.removeTaskFromId(id);
         save();
-        return super.removeTaskFromId(id);
-        //  save();
     }
 }

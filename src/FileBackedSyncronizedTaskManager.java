@@ -79,11 +79,7 @@ public class FileBackedSyncronizedTaskManager extends InMemoryTaskManager implem
     }
 
     @Override
-    public Task removeTaskFromId(int id) {
+    public void removeTaskFromId(int id) {
 
-        super.removeTaskFromId(id);
-        save();
-        return super.removeTaskFromId(id);
-        //  save();
     }
 }
