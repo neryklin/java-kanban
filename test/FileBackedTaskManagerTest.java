@@ -15,24 +15,30 @@ class FileBackedTaskManagerTest {
         FileBackedTaskManager taskManager = Managers.getDefault();
         String pathTo = taskManager.pathTo;
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("0,class Task,fist task,NEW,paint green button,\n");
-        stringBuilder.append("1,class Epic,fist epic,NEW,epic green button\n");
-        stringBuilder.append("5,class Epic,second  epic,NEW,epic red button\n");
+        stringBuilder.append("1,class Task,fist task,NEW,paint green button,null,null,null\n");
+        stringBuilder.append("2,class Epic,fist epic,NEW,epic green button,null,null,null\n");
+        stringBuilder.append("6,class Epic,second  epic,NEW,epic red button,null,null,null\n");
         try (FileWriter fileWriter = new FileWriter(pathTo); BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
             e.getMessage();
             e.printStackTrace();
         }
-
         taskManager.load();
         assertEquals(taskManager.getTasksList().size(), 1, "Не все задачи Таск загрузились из файла в TaskList");
         assertEquals(taskManager.getEpicsList().size(), 2, "Не все задачи Эпик загрузились из файла в TaskList");
     }
 
     @Test
-    void save() {
+    public void testException() {
+        assertThrows(IOException.class, () -> {
+            FileWriter fileWriter = new FileWriter("x:\\testExeptoin.tst");
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        }, "Ошибки работы с файлами должны приводить к исключения!!!");
+    }
 
+    @Test
+    void save() {
         FileBackedTaskManager taskManager = Managers.getDefault();
         Task task = new Task("fist task", "paint green button", TaskStatus.NEW);
         taskManager.addTask(task);
@@ -45,6 +51,5 @@ class FileBackedTaskManagerTest {
         taskManager.addEpic(epic2);
         taskManager.save();
         assertTrue(Files.exists(Path.of(taskManager.pathTo)), "Не произошло сохранения в файл");
-
     }
 }

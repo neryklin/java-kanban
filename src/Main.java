@@ -1,3 +1,6 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class Main {
@@ -7,15 +10,21 @@ public class Main {
 
         //test
         FileBackedTaskManager taskManager = Managers.getDefault();
+        LocalDateTime o = LocalDateTime.of(2024, 01, 01, 00, 00);
+        int iii = taskManager.calculateIndexOfArray(o);
+        int iii2 = taskManager.calculateIndexOfArray(o.plusDays(1));
+        int iii3 = taskManager.calculateIndexOfArray(o.plusHours(1));
+        int iii4 = taskManager.calculateIndexOfArray(o.plusMonths(1));
 
-
-         System.out.println("---------- loaded---------------");
+        System.out.println("---------- loaded---------------");
         System.out.println("---------- test task start---------------");
-        Task task = new Task("fist task", "paint green button", TaskStatus.NEW);
+        Task task = new Task("fist task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.HOURS), LocalDateTime.now().minusDays(1));
+        Task task1 = new Task("second task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.HOURS), LocalDateTime.now().minusDays(3));
         Task task2 = new Task("second  task", "paint red button", TaskStatus.NEW);
         taskManager.addTask(task);
+        taskManager.addTask(task1);
         taskManager.addTask(task2);
-
+        System.out.println(taskManager.prioritizedTasks.toString());
 
         System.out.println(taskManager.getTasksList().toString());
         task2.setName("new fist task");
@@ -23,12 +32,13 @@ public class Main {
         taskManager.updateTask(task2);
         System.out.println(taskManager.getTasksList().toString());
         System.out.println("---------- remove test task --------------");
+        taskManager.prioritizedTasksRemove(task2);
         taskManager.removeTaskFromId(task2.getId());
         System.out.println(taskManager.getTasksList().toString());
         System.out.println("---------- test task end ---------------");
 
         System.out.println("---------- test epic start---------------");
-        Epic epic = new Epic("fist epic", "epic green button", TaskStatus.NEW);
+        Epic epic = new Epic("fist epic", "epic green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.HOURS), LocalDateTime.now().minusDays(10));
         Subtask subtask = new Subtask("subtask 1", "open the color", TaskStatus.NEW, epic);
         Subtask subtask2 = new Subtask("subtask 2", "get brush", TaskStatus.NEW, epic);
         Subtask subtask3 = new Subtask("subtask 3", "paint the button", TaskStatus.NEW, epic);
@@ -60,7 +70,7 @@ public class Main {
         Subtask subtask5 = new Subtask("subtask 5", "open the color", TaskStatus.NEW, epic5);
         Subtask subtask6 = new Subtask("subtask 6", "get brush", TaskStatus.NEW, epic5);
         Subtask subtask7 = new Subtask("subtask 7", "paint the button", TaskStatus.NEW, epic5);
-        Epic epic6 = new Epic("epic 6", "epic red button", TaskStatus.NEW);
+        Epic epic6 = new Epic("epic 6", "epic red button", TaskStatus.NEW, Duration.of(13, ChronoUnit.HOURS), LocalDateTime.now().minusDays(5));
         taskManager.addEpic(epic5);
         taskManager.addEpic(epic6);
         taskManager.getTaskFromId(epic5.getId());

@@ -1,8 +1,24 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
     private Epic epicTask;
 
     public Subtask(int id, String name, TaskStatus status, String description, Epic epicTask) {
         super(id, name, status, description);
+        this.epicTask = epicTask;
+        epicTask.subTaskList.put(this.getId(), this);
+    }
+
+    public Subtask(int id, String name, TaskStatus status, String description, Epic epicTask, Duration duration, LocalDateTime startTime, LocalDateTime endTime) {
+        super(id, name, status, description, duration, startTime, endTime);
+        this.epicTask = epicTask;
+        epicTask.subTaskList.put(this.getId(), this);
+    }
+
+
+    public Subtask(int id, String name, TaskStatus status, String description, Epic epicTask, Duration duration, LocalDateTime startTime) {
+        super(id, name, status, description, duration, startTime);
         this.epicTask = epicTask;
         epicTask.subTaskList.put(this.getId(), this);
     }
@@ -30,7 +46,8 @@ public class Subtask extends Task {
 
     public String prepareToSave() {
         String sep = ",";
-        return this.getId() + sep + this.getClass() + sep + this.getName() + sep + this.getStatus() + sep + this.getDescription() + sep + this.epicTask.getId();
+        String stringPrepareToSave = super.prepareToSave();
+        return stringPrepareToSave + sep + this.epicTask.getId();
     }
 
 }

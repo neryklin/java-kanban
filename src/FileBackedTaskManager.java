@@ -1,4 +1,6 @@
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
@@ -14,16 +16,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             String[] str = new String[6];
             while (bufferedReader.ready()) {
                 str = bufferedReader.readLine().split(",");
+                Duration duration = str[5].equals("null") ? Duration.ZERO : Duration.ofMinutes(Integer.parseInt(str[5]));
+                LocalDateTime startTime = str[6].equals("null") ? null : LocalDateTime.parse(str[6]);
+                LocalDateTime endTime = str[7].equals("null") ? null : LocalDateTime.parse(str[7]);
                 if (str[1].equals("class Task")) {
-                    Task task = new Task(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4]);
+                    Task task = new Task(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4], duration, startTime, endTime);
                     tasks.put(task.getId(), task);
                     maxIndexTast = Integer.max(maxIndexTast, task.getId());
                 } else if (str[1].equals("class Epic")) {
-                    Epic epic = new Epic(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4]);
+                    Epic epic = new Epic(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4], duration, startTime, endTime);
                     epics.put(epic.getId(), epic);
                     maxIndexTast = Integer.max(maxIndexTast, epic.getId());
                 } else if (str[1].equals("class Subtask")) {
-                    Subtask subtask = new Subtask(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4], epics.get(Integer.parseInt(str[5])));
+                    Subtask subtask = new Subtask(Integer.parseInt(str[0]), str[2], TaskStatus.valueOf(str[3]), str[4], epics.get(Integer.parseInt(str[5])), duration, startTime, endTime);
                     maxIndexTast = Integer.max(maxIndexTast, subtask.getId());
                 }
 

@@ -9,6 +9,8 @@ public interface TaskManager {
 
     void updateEpicStatus(Epic epic);
 
+    void updateEpicTimeVariable(Epic epic);
+
     void addEpicSubTask(Epic epic, Subtask subtask);
 
     HashMap<Integer, Task> getTasksList();

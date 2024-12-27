@@ -1,11 +1,21 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class Epic extends Task {
 
     HashMap<Integer, Subtask> subTaskList = new HashMap<>();
 
+
     public Epic(String name, String description, TaskStatus status, HashMap<Integer, Subtask> subTaskList) {
         super(name, description, status);
+        if (subTaskList != null) {
+            this.subTaskList = subTaskList;
+        }
+    }
+
+    public Epic(String name, String description, TaskStatus status, HashMap<Integer, Subtask> subTaskList, Duration duration, LocalDateTime startTime) {
+        super(name, description, status, duration, startTime);
         if (subTaskList != null) {
             this.subTaskList = subTaskList;
         }
@@ -15,12 +25,19 @@ public class Epic extends Task {
         super(name, description, status);
     }
 
+    public Epic(String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
+        super(name, description, status, duration, startTime);
+    }
+
     public Epic(int id, String name, TaskStatus status, String description) {
         super(id, name, status, description);
     }
 
-    public String prepareToSave() {
-        String sep = ",";
-        return this.getId() + sep + this.getClass() + sep + this.getName() + sep + this.getStatus() + sep + this.getDescription();
+    public Epic(int id, String name, TaskStatus status, String description, Duration duration, LocalDateTime startTime, LocalDateTime endTime) {
+        super(id, name, status, description, duration, startTime, endTime);
+    }
+
+    public Epic(int id, String name, TaskStatus status, String description, Duration duration, LocalDateTime startTime) {
+        super(id, name, status, description, duration, startTime);
     }
 }

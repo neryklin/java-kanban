@@ -1,10 +1,100 @@
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
+
+    @Test
+    void checkPrioritizedTasksAdd() {
+        FileBackedTaskManager taskManager = Managers.getDefault();
+        Task task1 = new Task("second task", "paint green button", TaskStatus.NEW, Duration.of(15, ChronoUnit.MINUTES),
+                LocalDateTime.of(2024, 10, 1, 0, 0));
+        taskManager.addTask(task1);
+        TreeSet<Task> taskSet = (TreeSet) taskManager.getPrioritizedTasks();
+        assertEquals(taskSet.size(), 1, "Ошиюка добавления реестра сортированных задач по приоритетам одна задача, в списке больше одной");
+        assertEquals(taskSet.first().getId(), task1.getId(), "Ошиюка добавления реестра сортированных задач по приоритетам одна задача, но не правильная");
+        Task task = new Task("fist task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.MINUTES),
+                LocalDateTime.of(2024, 3, 1, 1, 45));
+        taskManager.addTask(task);
+        TreeSet<Task> taskSet2 = (TreeSet) taskManager.getPrioritizedTasks();
+        assertEquals(taskSet2.size(), 2, "Ошиюка добавления реестра сортированных задач по приоритетам две задачс, в списке не ДВЕ");
+        assertEquals(taskSet2.first().getId(), task.getId(), "Ошиюка добавления реестра сортированных задач по приоритетам две задачи, но не правильная");
+    }
+
+    @Test
+    void checkStatusEpic() {
+        TaskManager taskManager = Managers.getDefault();
+        Epic epic = new Epic("fist epic", "epic green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.HOURS), LocalDateTime.now().minusDays(10));
+        taskManager.addEpic(epic);
+        Subtask subtask = new Subtask("subtask 1", "open the color", TaskStatus.NEW, epic);
+        Subtask subtask2 = new Subtask("subtask 2", "get brush", TaskStatus.NEW, epic);
+        Subtask subtask3 = new Subtask("subtask 3", "paint the button", TaskStatus.NEW, epic);
+
+        taskManager.addEpicSubTask(epic, subtask);
+        taskManager.addEpicSubTask(epic, subtask2);
+        taskManager.addEpicSubTask(epic, subtask3);
+        assertEquals(epic.getStatus(), TaskStatus.NEW, "Ошибка расчет статуса эпик NEW");
+        subtask.setStatus(TaskStatus.DONE);
+        subtask2.setStatus(TaskStatus.DONE);
+        subtask3.setStatus(TaskStatus.DONE);
+        taskManager.updateEpicStatus(epic);
+        assertEquals(epic.getStatus(), TaskStatus.DONE, "Ошибка расчет статуса эпик DONE");
+        subtask.setStatus(TaskStatus.NEW);
+        subtask2.setStatus(TaskStatus.DONE);
+        subtask3.setStatus(TaskStatus.DONE);
+        taskManager.updateEpicStatus(epic);
+        assertEquals(epic.getStatus(), TaskStatus.IN_PROGRESS, "Ошибка расчет статуса эпик DONE");
+    }
+
+    @Test
+    void removeTastIntervalMap() {
+        FileBackedTaskManager taskManager = Managers.getDefault();
+        Task task1 = new Task("second task", "paint green button", TaskStatus.NEW, Duration.of(15, ChronoUnit.MINUTES),
+                LocalDateTime.of(2024, 1, 1, 0, 0));
+        Task task = new Task("fist task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.MINUTES),
+                LocalDateTime.of(2024, 1, 1, 1, 45));
+        taskManager.addTask(task1);
+        taskManager.addTask(task);
+        taskManager.removeTaskFromId(task1.getId());
+        assertEquals(taskManager.intervalMapBusy[0], 0, "Не корректно удален таск не зачищена интервал МАП интервал Мап");
+        assertEquals(taskManager.intervalMapBusy[7], task.getId(), "Не корректно удален таск не зачищена интервал МАП интервал Мап");
+        assertEquals(taskManager.intervalMapBusy[8], task.getId(), "Не корректно удален таск не зачищена интервал МАП интервал Мап");
+    }
+
+    @Test
+    void checkStatusCrosNoCros() {
+        FileBackedTaskManager taskManager = Managers.getDefault();
+        Task task1 = new Task("second task", "paint green button", TaskStatus.NEW, Duration.of(15, ChronoUnit.MINUTES),
+                LocalDateTime.of(2024, 1, 1, 0, 0));
+        Task task = new Task("fist task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.MINUTES),
+                LocalDateTime.of(2024, 1, 1, 1, 45));
+        taskManager.addTask(task1);
+        taskManager.addTask(task);
+        assertEquals(taskManager.intervalMapBusy[0], task1.getId(), "Не корректно встало первое значение в начало периода интервал Мап");
+        assertEquals(taskManager.intervalMapBusy[7], task.getId(), "Не корректно встало второе значение в 1-45 длиной 30 минут значение в интервал Мап");
+        assertEquals(taskManager.intervalMapBusy[8], task.getId(), "Не корректно встало второе значение в 1-45 длиной 30 минут значение в интервал Мап");
+    }
+
+    @Test
+    void checkStatusCrosYesCros() {
+        FileBackedTaskManager taskManager = Managers.getDefault();
+        Task task1 = new Task("second task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.MINUTES),
+                LocalDateTime.of(2024, 1, 1, 0, 0));
+        Task task = new Task("fist task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.MINUTES),
+                LocalDateTime.of(2024, 1, 1, 0, 15));
+        taskManager.addTask(task1);
+        taskManager.addTask(task);
+        assertEquals(taskManager.intervalMapBusy[0], task1.getId(), "Не корректно встало первое значение в начало периода интервал Мап");
+        assertEquals(taskManager.intervalMapBusy[1], task1.getId(), "Не корректно встало первое значение в начало периода интервал Мап");
+        assertEquals(taskManager.intervalMapBusy[3], 0, "Не корректно заполнено пересечение, задача не должна была встать в план значение в интервал Мап");
+        assertEquals(taskManager.intervalMapBusy[4], 0, "Не корректно заполнено пересечение, задача не должна была встать в план значение в интервал Мап");
+    }
 
     @Test
     void addTask() {
