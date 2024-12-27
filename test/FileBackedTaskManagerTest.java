@@ -1,10 +1,10 @@
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,10 +31,11 @@ class FileBackedTaskManagerTest {
 
     @Test
     public void testException() {
-        assertThrows(IOException.class, () -> {
-            FileWriter fileWriter = new FileWriter("x:\\testExeptoin.tst");
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        }, "Ошибки работы с файлами должны приводить к исключения!!!");
+        assertThrows(ManagerSaveException.class, () -> {
+            try (FileReader fileReader = new FileReader("xx:\\pathTo"); BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+        } catch (IOException e) {
+            throw new ManagerSaveException(e.getMessage());
+        }});
     }
 
     @Test

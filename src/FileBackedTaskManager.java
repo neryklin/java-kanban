@@ -35,9 +35,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             }
 
             Task.setCountId(++maxIndexTast);
-        } catch (Exception e) {
-            e.printStackTrace();
-            e.getMessage();
+        } catch (IOException e) {
+            throw new ManagerSaveException(e.getMessage());
         }
     }
 
