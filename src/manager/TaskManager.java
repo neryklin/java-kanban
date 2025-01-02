@@ -1,4 +1,9 @@
-import java.util.ArrayList;
+package manager;
+
+import domain.Epic;
+import domain.Subtask;
+import domain.Task;
+
 import java.util.HashMap;
 
 public interface TaskManager {
@@ -9,6 +14,8 @@ public interface TaskManager {
     void addEpic(Epic epic);
 
     void updateEpicStatus(Epic epic);
+
+    void updateEpicTimeVariable(Epic epic);
 
     void addEpicSubTask(Epic epic, Subtask subtask);
 
@@ -25,7 +32,7 @@ public interface TaskManager {
     Task getTaskFromId(int id);
 
 
-    Task removeTaskFromId(int id);
+    void removeTaskFromId(int id);
 
 
 }
