@@ -1,3 +1,5 @@
+package domain;
+
 public class ManagerSaveException extends RuntimeException {
 
     public ManagerSaveException() {

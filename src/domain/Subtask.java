@@ -1,3 +1,5 @@
+package domain;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -32,12 +34,12 @@ public class Subtask extends Task {
         super(name, description, status);
     }
 
-    public void setEpic(Epic epic) {
-        this.epicTask = epic;
-    }
-
     public Epic getEpic() {
         return epicTask;
+    }
+
+    public void setEpic(Epic epic) {
+        this.epicTask = epic;
     }
 
     public void setEpicTask(Epic epicTask) {

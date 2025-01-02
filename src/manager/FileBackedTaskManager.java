@@ -1,3 +1,7 @@
+package manager;
+
+import domain.*;
+
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -48,7 +52,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
         for (Integer i : epics.keySet()) {
             stringBuilder.append(epics.get(i).prepareToSave() + "\n");
-            var sublist = epics.get(i).subTaskList;
+            var sublist = epics.get(i).getSubTaskList();
             for (Integer j : sublist.keySet()) {
                 stringBuilder.append(sublist.get(j).prepareToSave() + "\n");
             }
@@ -102,5 +106,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public void removeTaskFromId(int id) {
         super.removeTaskFromId(id);
         save();
+    }
+
+    public String getPathTo() {
+        return pathTo;
     }
 }

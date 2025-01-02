@@ -1,3 +1,9 @@
+package manager;
+
+import domain.Epic;
+import domain.Subtask;
+import domain.Task;
+
 import java.util.HashMap;
 
 public interface TaskManager {

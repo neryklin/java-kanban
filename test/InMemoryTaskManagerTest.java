@@ -1,3 +1,10 @@
+import domain.Epic;
+import domain.Subtask;
+import domain.Task;
+import domain.TaskStatus;
+import manager.FileBackedTaskManager;
+import manager.Managers;
+import manager.TaskManager;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -62,9 +69,9 @@ class InMemoryTaskManagerTest {
         taskManager.addTask(task1);
         taskManager.addTask(task);
         taskManager.removeTaskFromId(task1.getId());
-        assertEquals(taskManager.intervalMapBusy[0], 0, "Не корректно удален таск не зачищена интервал МАП интервал Мап");
-        assertEquals(taskManager.intervalMapBusy[7], task.getId(), "Не корректно удален таск не зачищена интервал МАП интервал Мап");
-        assertEquals(taskManager.intervalMapBusy[8], task.getId(), "Не корректно удален таск не зачищена интервал МАП интервал Мап");
+        assertEquals(taskManager.getIntervalMapBusy()[0], 0, "Не корректно удален таск не зачищена интервал МАП интервал Мап");
+        assertEquals(taskManager.getIntervalMapBusy()[7], task.getId(), "Не корректно удален таск не зачищена интервал МАП интервал Мап");
+        assertEquals(taskManager.getIntervalMapBusy()[8], task.getId(), "Не корректно удален таск не зачищена интервал МАП интервал Мап");
     }
 
     @Test
@@ -76,9 +83,9 @@ class InMemoryTaskManagerTest {
                 LocalDateTime.of(2024, 1, 1, 1, 45));
         taskManager.addTask(task1);
         taskManager.addTask(task);
-        assertEquals(taskManager.intervalMapBusy[0], task1.getId(), "Не корректно встало первое значение в начало периода интервал Мап");
-        assertEquals(taskManager.intervalMapBusy[7], task.getId(), "Не корректно встало второе значение в 1-45 длиной 30 минут значение в интервал Мап");
-        assertEquals(taskManager.intervalMapBusy[8], task.getId(), "Не корректно встало второе значение в 1-45 длиной 30 минут значение в интервал Мап");
+        assertEquals(taskManager.getIntervalMapBusy()[0], task1.getId(), "Не корректно встало первое значение в начало периода интервал Мап");
+        assertEquals(taskManager.getIntervalMapBusy()[7], task.getId(), "Не корректно встало второе значение в 1-45 длиной 30 минут значение в интервал Мап");
+        assertEquals(taskManager.getIntervalMapBusy()[8], task.getId(), "Не корректно встало второе значение в 1-45 длиной 30 минут значение в интервал Мап");
     }
 
     @Test
@@ -90,10 +97,10 @@ class InMemoryTaskManagerTest {
                 LocalDateTime.of(2024, 1, 1, 0, 15));
         taskManager.addTask(task1);
         taskManager.addTask(task);
-        assertEquals(taskManager.intervalMapBusy[0], task1.getId(), "Не корректно встало первое значение в начало периода интервал Мап");
-        assertEquals(taskManager.intervalMapBusy[1], task1.getId(), "Не корректно встало первое значение в начало периода интервал Мап");
-        assertEquals(taskManager.intervalMapBusy[3], 0, "Не корректно заполнено пересечение, задача не должна была встать в план значение в интервал Мап");
-        assertEquals(taskManager.intervalMapBusy[4], 0, "Не корректно заполнено пересечение, задача не должна была встать в план значение в интервал Мап");
+        assertEquals(taskManager.getIntervalMapBusy()[0], task1.getId(), "Не корректно встало первое значение в начало периода интервал Мап");
+        assertEquals(taskManager.getIntervalMapBusy()[1], task1.getId(), "Не корректно встало первое значение в начало периода интервал Мап");
+        assertEquals(taskManager.getIntervalMapBusy()[3], 0, "Не корректно заполнено пересечение, задача не должна была встать в план значение в интервал Мап");
+        assertEquals(taskManager.getIntervalMapBusy()[4], 0, "Не корректно заполнено пересечение, задача не должна была встать в план значение в интервал Мап");
     }
 
     @Test

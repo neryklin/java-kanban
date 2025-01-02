@@ -1,3 +1,5 @@
+package domain;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -39,5 +41,9 @@ public class Epic extends Task {
 
     public Epic(int id, String name, TaskStatus status, String description, Duration duration, LocalDateTime startTime) {
         super(id, name, status, description, duration, startTime);
+    }
+
+    public HashMap<Integer, Subtask> getSubTaskList() {
+        return subTaskList;
     }
 }

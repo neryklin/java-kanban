@@ -1,10 +1,11 @@
+import domain.*;
+import manager.FileBackedTaskManager;
+import manager.Managers;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +14,7 @@ class FileBackedTaskManagerTest {
     @Test
     void load() {
         FileBackedTaskManager taskManager = Managers.getDefault();
-        String pathTo = taskManager.pathTo;
+        String pathTo = taskManager.getPathTo();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("1,class Task,fist task,NEW,paint green button,null,null,null\n");
         stringBuilder.append("2,class Epic,fist epic,NEW,epic green button,null,null,null\n");
@@ -33,9 +34,10 @@ class FileBackedTaskManagerTest {
     public void testException() {
         assertThrows(ManagerSaveException.class, () -> {
             try (FileReader fileReader = new FileReader("xx:\\pathTo"); BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-        } catch (IOException e) {
-            throw new ManagerSaveException(e.getMessage());
-        }});
+            } catch (IOException e) {
+                throw new ManagerSaveException(e.getMessage());
+            }
+        });
     }
 
     @Test
@@ -51,6 +53,6 @@ class FileBackedTaskManagerTest {
         taskManager.addEpic(epic);
         taskManager.addEpic(epic2);
         taskManager.save();
-        assertTrue(Files.exists(Path.of(taskManager.pathTo)), "Не произошло сохранения в файл");
+        assertTrue(Files.exists(Path.of(taskManager.getPathTo())), "Не произошло сохранения в файл");
     }
 }

@@ -1,3 +1,10 @@
+import domain.Epic;
+import domain.Subtask;
+import domain.Task;
+import domain.TaskStatus;
+import manager.FileBackedTaskManager;
+import manager.Managers;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -24,7 +31,7 @@ public class Main {
         taskManager.addTask(task);
         taskManager.addTask(task1);
         taskManager.addTask(task2);
-        System.out.println(taskManager.prioritizedTasks.toString());
+        System.out.println(taskManager.getPrioritizedTasks());
 
         System.out.println(taskManager.getTasksList().toString());
         task2.setName("new fist task");
@@ -62,7 +69,7 @@ public class Main {
 
         //Дополнительное задание. Реализуем пользовательский сценарий
         System.out.println("---------- test history---------------");
-        List<Task> historyList = taskManager.historyManager.getHistory();
+        List<Task> historyList = taskManager.getHistoryManager().getHistory();
         System.out.println(historyList);
 
 
@@ -78,17 +85,17 @@ public class Main {
         taskManager.getTaskFromId(subtask5.getId());
         taskManager.getTaskFromId(subtask7.getId());
         taskManager.getTaskFromId(subtask6.getId());
-        historyList = taskManager.historyManager.getHistory();
+        historyList = taskManager.getHistoryManager().getHistory();
         System.out.println(historyList);
         taskManager.getTaskFromId(epic5.getId());
         taskManager.getTaskFromId(subtask5.getId());
-        historyList = taskManager.historyManager.getHistory();
+        historyList = taskManager.getHistoryManager().getHistory();
         System.out.println(historyList);
         taskManager.removeTaskFromId(subtask6.getId());
-        historyList = taskManager.historyManager.getHistory();
+        historyList = taskManager.getHistoryManager().getHistory();
         System.out.println(historyList);
         taskManager.removeTaskFromId(epic5.getId());
-        historyList = taskManager.historyManager.getHistory();
+        historyList = taskManager.getHistoryManager().getHistory();
         System.out.println(historyList);
 
         //Дополнительное задание. Реализуем пользовательский сценарий

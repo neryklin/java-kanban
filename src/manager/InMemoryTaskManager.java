@@ -1,3 +1,10 @@
+package manager;
+
+import domain.Epic;
+import domain.Subtask;
+import domain.Task;
+import domain.TaskStatus;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -114,8 +121,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpicStatus(Epic epic) {
         boolean newStatus = true;
         boolean doneStatus = true;
-        if (!epic.subTaskList.isEmpty()) {
-            for (Subtask subtask : epic.subTaskList.values()) {
+        if (!epic.getSubTaskList().isEmpty()) {
+            for (Subtask subtask : epic.getSubTaskList().values()) {
                 if (subtask.getStatus() != TaskStatus.NEW) {
                     newStatus = false;
                 }
@@ -138,8 +145,8 @@ public class InMemoryTaskManager implements TaskManager {
         Duration durationSum = Duration.ZERO;
         LocalDateTime minStartTime = LocalDateTime.MAX;
         LocalDateTime maxEndTime = LocalDateTime.MIN;
-        if (!epic.subTaskList.isEmpty()) {
-            for (Subtask subtask : epic.subTaskList.values()) {
+        if (!epic.getSubTaskList().isEmpty()) {
+            for (Subtask subtask : epic.getSubTaskList().values()) {
                 prioritizedTasksAdd(subtask);
                 addTaskToBusyPlan(subtask);
                 durationSum.plus(subtask.getDuration());
@@ -155,7 +162,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addEpicSubTask(Epic epic, Subtask subtask) {
-        epic.subTaskList.put(subtask.getId(), subtask);
+        epic.getSubTaskList().put(subtask.getId(), subtask);
         subtask.setEpic(epic);
         updateEpicStatus(epic);
         updateEpicTimeVariable(epic);
@@ -175,7 +182,7 @@ public class InMemoryTaskManager implements TaskManager {
     public HashMap<Integer, Subtask> getAllSubTasksList() {
         HashMap<Integer, Subtask> subtasklist = new HashMap<>();
         for (Epic epic : epics.values()) {
-            for (Subtask subtask : epic.subTaskList.values()) {
+            for (Subtask subtask : epic.getSubTaskList().values()) {
                 subtasklist.put(subtask.getId(), subtask);
             }
         }
@@ -184,7 +191,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public HashMap<Integer, Subtask> getSubTasksListFromEpic(Epic epic) {
-        return epic.subTaskList;
+        return epic.getSubTaskList();
     }
 
     @Override
@@ -247,4 +254,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
+    public HistoryManager getHistoryManager() {
+        return historyManager;
+    }
+
+    public int[] getIntervalMapBusy() {
+        return intervalMapBusy;
+    }
 }

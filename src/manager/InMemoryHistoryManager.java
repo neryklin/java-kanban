@@ -1,3 +1,9 @@
+package manager;
+
+import domain.HistoryLinkedList;
+import domain.Node;
+import domain.Task;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,3 +1,7 @@
+import domain.Task;
+import domain.TaskStatus;
+import manager.HistoryManager;
+import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -13,7 +17,7 @@ class InMemoryHistoryManagerTest {
     @Test
     void size() {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        HistoryManager historyManager = taskManager.historyManager;
+        HistoryManager historyManager = taskManager.getHistoryManager();
         assertEquals(historyManager.size(), 0, "Очередь инстории инициализируется не нулем");
         Task task = new Task("fist task", "paint green button", TaskStatus.NEW);
         taskManager.addTask(task);
@@ -25,7 +29,7 @@ class InMemoryHistoryManagerTest {
     @Test
     void remove() {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        HistoryManager historyManager = taskManager.historyManager;
+        HistoryManager historyManager = taskManager.getHistoryManager();
         Task task = new Task("fist task", "paint green button", TaskStatus.NEW);
         taskManager.addTask(task);
         taskManager.getTaskFromId(task.getId());
@@ -37,7 +41,7 @@ class InMemoryHistoryManagerTest {
     @Test
     void removeAll() {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        HistoryManager historyManager = taskManager.historyManager;
+        HistoryManager historyManager = taskManager.getHistoryManager();
         Task task = new Task("fist task", "paint green button", TaskStatus.NEW);
         Task task2 = new Task("fist task", "paint green button", TaskStatus.NEW);
         taskManager.addTask(task);
@@ -52,7 +56,7 @@ class InMemoryHistoryManagerTest {
     @Test
     void add() {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        HistoryManager historyManager = taskManager.historyManager;
+        HistoryManager historyManager = taskManager.getHistoryManager();
         Task task = new Task("fist task", "paint green button", TaskStatus.NEW);
         taskManager.addTask(task);
         taskManager.getTaskFromId(task.getId());
@@ -63,7 +67,7 @@ class InMemoryHistoryManagerTest {
     @Test
     void getHistory() {
         InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        HistoryManager historyManager = taskManager.historyManager;
+        HistoryManager historyManager = taskManager.getHistoryManager();
 
         Task task = new Task("fist task", "paint green button", TaskStatus.NEW);
         Task task2 = new Task("second task", "paint green button", TaskStatus.NEW);
@@ -74,7 +78,7 @@ class InMemoryHistoryManagerTest {
         taskManager.getTaskFromId(task.getId());
         taskManager.getTaskFromId(task2.getId());
         taskManager.getTaskFromId(task3.getId());
-        List<Task> listHistory = taskManager.historyManager.getHistory();
+        List<Task> listHistory = taskManager.getHistoryManager().getHistory();
         assertEquals(listHistory.size(), 3, "Первая проверка получения истории 3 положили 3 не получили, не корректно");
         taskManager.getTaskFromId(task2.getId());
         assertEquals(listHistory.size(), 3, "Вторая проверка получения истории 3 положили 3 не получили, не корректно");
