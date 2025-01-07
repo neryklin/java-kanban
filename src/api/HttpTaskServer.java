@@ -136,7 +136,7 @@ public class HttpTaskServer {
         return Endpoint.UNKNOWN;
     }
 
-    static public Optional<Integer> getTaskId(HttpExchange exchange) {
+    public static Optional<Integer> getTaskId(HttpExchange exchange) {
         String[] pathParts = exchange.getRequestURI().getPath().split("/");
         try {
             return Optional.of(Integer.parseInt(pathParts[2]));
