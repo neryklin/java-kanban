@@ -1,6 +1,8 @@
 import domain.Epic;
 import domain.Subtask;
 import domain.TaskStatus;
+import manager.FileBackedTaskManager;
+import manager.Managers;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +19,28 @@ class SubtaskTest {
         assertNull(subtask.getEpic(), "Ошибка при создании саб таск, опик должен быть пустым");
     }
 
+    @Test
+    void addTwouSubtast() {
+        FileBackedTaskManager taskManager = Managers.getDefault();
+        Epic epic = new Epic("fist epic", "epic green button", TaskStatus.NEW);
+        Subtask subtask = new Subtask("subtask 1", "open the color", TaskStatus.NEW, epic);
+        Subtask subtask2 = new Subtask("subtask 1", "open the color", TaskStatus.NEW, epic);
+        taskManager.addEpicSubTask(epic, subtask);
+        taskManager.addEpicSubTask(epic, subtask2);
+        assertEquals(epic.getSubTaskList().size(), 2, "Ошибка добавления двух subtask");
+    }
+
+    @Test
+    void removeOneSubtast() {
+        FileBackedTaskManager taskManager = Managers.getDefault();
+        Epic epic = new Epic("fist epic", "epic green button", TaskStatus.NEW);
+        Subtask subtask = new Subtask("subtask 1", "open the color", TaskStatus.NEW, epic);
+        Subtask subtask2 = new Subtask("subtask 1", "open the color", TaskStatus.NEW, epic);
+        taskManager.addEpicSubTask(epic, subtask);
+        taskManager.addEpicSubTask(epic, subtask2);
+        epic.removeSubtask(epic, subtask.getId());
+        assertEquals(epic.getSubTaskList().size(), 1, "Ошибка Удаления одного subtask");
+    }
 
     @Test
     void newSubtast4() {

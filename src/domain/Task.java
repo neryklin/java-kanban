@@ -51,6 +51,7 @@ public class Task {
         this.duration = duration;
         this.startTime = startTime;
         this.endTime = endTime;
+        calculateEndTime();
     }
 
     public Task(int id, String name, TaskStatus status, String description) {
@@ -58,6 +59,11 @@ public class Task {
         this.name = name;
         this.status = status;
         this.description = description;
+    }
+
+    public Task() {
+        this.id = Task.countId;
+        Task.countId++;
     }
 
     public static void setCountId(int countId) {
@@ -83,7 +89,9 @@ public class Task {
     }
 
     public void calculateEndTime() {
-        this.endTime = startTime.plus(duration);
+        if (startTime != null) {
+            this.endTime = startTime.plus(duration);
+        }
     }
 
     public LocalDateTime getEndTime() {
