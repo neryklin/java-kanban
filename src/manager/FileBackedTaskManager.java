@@ -96,6 +96,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         save();
     }
 
+
+    public void addEpicIdSubTask(int id, Subtask subtask) {
+        super.addEpicSubTask(getEpicFromId(id), subtask);
+        save();
+    }
+
     @Override
     public void removeAllTask() {
         super.removeAllTask();

@@ -1,17 +1,23 @@
 package Api;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import domain.Endpoint;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class BaseHttpHandler implements HttpHandler {
 
-    protected void sendText(HttpExchange h, String text) throws IOException {
+    protected void sendText(HttpExchange h, String text, int responseCode) throws IOException {
         byte[] resp = text.getBytes(StandardCharsets.UTF_8);
         h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        h.sendResponseHeaders(200, resp.length);
+        h.sendResponseHeaders(responseCode, resp.length);
         h.getResponseBody().write(resp);
         h.close();
     }
@@ -36,4 +42,7 @@ public class BaseHttpHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
 
     }
+
+
+
 }

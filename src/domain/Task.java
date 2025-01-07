@@ -62,7 +62,8 @@ public class Task {
     }
 
     public Task() {
-        System.out.println("sdfsdfsdf");
+        this.id = Task.countId;
+        Task.countId++;
     }
 
     public static void setCountId(int countId) {
@@ -88,7 +89,9 @@ public class Task {
     }
 
     public void calculateEndTime() {
-        this.endTime = startTime.plus(duration);
+        if (startTime!=null) {
+            this.endTime = startTime.plus(duration);
+        }
     }
 
     public LocalDateTime getEndTime() {

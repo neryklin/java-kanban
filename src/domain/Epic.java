@@ -46,4 +46,9 @@ public class Epic extends Task {
     public HashMap<Integer, Subtask> getSubTaskList() {
         return subTaskList;
     }
+
+    public void removeSubtask(Epic epic, Integer subtaskId) {
+        epic.subTaskList.remove(subtaskId);
+
+    }
 }

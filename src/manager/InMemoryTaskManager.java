@@ -34,14 +34,14 @@ public class InMemoryTaskManager implements TaskManager {
         int startCheck = calculateIndexOfArray(task.getStartTime());
         int endtCheck = calculateIndexOfArray(task.getEndTime());
         for (int i = startCheck; i < endtCheck; i++) {
-            if (intervalMapBusy[i] != 0) {
+            if (intervalMapBusy[i] != 0 && intervalMapBusy[i] != task.getId()) {
                 busyInterval.add(intervalMapBusy[i]);
             }
         }
         return busyInterval;
     }
 
-    public void addTaskToBusyPlan(Task task) {
+    public  List<Integer> addTaskToBusyPlan(Task task) {
         List<Integer> crossingTask = getBusyIntreval(task);
         if (crossingTask.size() > 0) {
             crossingTask.stream()
@@ -49,7 +49,7 @@ public class InMemoryTaskManager implements TaskManager {
                         return getTaskFromId(o);
                     })
                     .forEach(System.out::println);
-            return;
+            return crossingTask;
         } else {
             if (task.getStartTime() != null && task.getEndTime() != null) {
                 int startCheck = calculateIndexOfArray(task.getStartTime());
@@ -59,6 +59,7 @@ public class InMemoryTaskManager implements TaskManager {
                 }
             }
         }
+        return crossingTask;
     }
 
     public void removeTaskFromBusyPlan(Task task) {
@@ -96,13 +97,16 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addTask(Task task) {
         tasks.put(task.getId(), task);
+        task.calculateEndTime();
         prioritizedTasksAdd(task);
         addTaskToBusyPlan(task);
+
     }
 
     @Override
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);
+        task.calculateEndTime();
         prioritizedTasksAdd(task);
         addTaskToBusyPlan(task);
 
@@ -224,6 +228,25 @@ public class InMemoryTaskManager implements TaskManager {
         return null;
     }
 
+    public Epic getEpicFromId(int id) {
+        if (epics.containsKey(id)) {
+            Epic epic = epics.get(id);
+            historyManager.add(epic);
+            return epic;
+        }
+        return null;
+    }
+
+    public Subtask getSubtaskFromId(int id) {
+        HashMap<Integer, Subtask> subtasklist = getAllSubTasksList();
+        if (subtasklist.containsKey(id)) {
+            Subtask subtask = subtasklist.get(id);
+            historyManager.add(subtask);
+            return subtask;
+        }
+        return null;
+    }
+
     @Override
     public void removeTaskFromId(int id) {
         if (tasks.containsKey(id)) {
@@ -247,6 +270,7 @@ public class InMemoryTaskManager implements TaskManager {
                 subtasklist.remove(id);
                 updateEpicStatus(teampEpic);
                 updateEpicTimeVariable(teampEpic);
+                teampEpic.removeSubtask(teampEpic,id);
             }
         }
         historyManager.remove(id);
@@ -261,4 +285,8 @@ public class InMemoryTaskManager implements TaskManager {
     public int[] getIntervalMapBusy() {
         return intervalMapBusy;
     }
+
+
+
+
 }

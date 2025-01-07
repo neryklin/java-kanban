@@ -4,7 +4,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Subtask extends Task {
-    private Epic epicTask;
+    private transient Epic epicTask;
+    private int epicTaskId;
 
     public Subtask(int id, String name, TaskStatus status, String description, Epic epicTask) {
         super(id, name, status, description);
@@ -16,6 +17,12 @@ public class Subtask extends Task {
         super(id, name, status, description, duration, startTime, endTime);
         this.epicTask = epicTask;
         epicTask.subTaskList.put(this.getId(), this);
+    }
+
+    public Subtask(int id, String name, TaskStatus status, String description, int epicTaskId, Duration duration, LocalDateTime startTime, LocalDateTime endTime) {
+        super(id, name, status, description, duration, startTime, endTime);
+        this.epicTaskId = epicTaskId;
+        //epicTask.subTaskList.put(this.getId(), this);
     }
 
 
@@ -32,6 +39,15 @@ public class Subtask extends Task {
 
     public Subtask(String name, String description, TaskStatus status) {
         super(name, description, status);
+    }
+
+    public Subtask() {
+
+    }
+
+    public Subtask(String name, String description, TaskStatus status, int epicTaskId) {
+        super(name, description,status);
+        this.epicTaskId = epicTaskId;
     }
 
     public Epic getEpic() {
@@ -52,4 +68,7 @@ public class Subtask extends Task {
         return stringPrepareToSave + sep + this.epicTask.getId();
     }
 
+    public int getEpicTaskId() {
+        return epicTaskId;
+    }
 }
