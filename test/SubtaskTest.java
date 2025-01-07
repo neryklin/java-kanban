@@ -38,7 +38,7 @@ class SubtaskTest {
         Subtask subtask2 = new Subtask("subtask 1", "open the color", TaskStatus.NEW, epic);
         taskManager.addEpicSubTask(epic, subtask);
         taskManager.addEpicSubTask(epic, subtask2);
-        epic.removeSubtask(epic,subtask.getId());
+        epic.removeSubtask(epic, subtask.getId());
         assertEquals(epic.getSubTaskList().size(), 1, "Ошибка Удаления одного subtask");
     }
 

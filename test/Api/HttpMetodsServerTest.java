@@ -19,21 +19,16 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class HttpMetodsServerTest {
     FileBackedTaskManager manager = Managers.getDefault();
     // передаём его в качестве аргумента в конструктор HttpTaskServer
     HttpTaskServer httpTaskServer = new HttpTaskServer(manager);
-
-    class TaskListTypeToken extends TypeToken<List<Task>> {
-    }
-    class TaskSetTypeToken extends TypeToken<Set<Task>> {
-    }
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -46,7 +41,6 @@ public class HttpMetodsServerTest {
     public void shutDown() {
         httpTaskServer.stopHttp();
     }
-
 
     @Test
     public void testGetHistory() throws IOException, InterruptedException {
@@ -68,7 +62,7 @@ public class HttpMetodsServerTest {
         // проверяем код ответа
         assertEquals(200, response.statusCode());
         Gson gson = HttpTaskServer.getBaseGson();
-        List<Task> task_Json = gson.fromJson(response.body(),new TaskListTypeToken().getType());
+        List<Task> task_Json = gson.fromJson(response.body(), new TaskListTypeToken().getType());
         // проверяем, что создалась одна задача с корректным именем
         List<Task> task_history = (manager.getHistoryManager().getHistory());
         assertNotNull(task_Json, "История не возвращаются");
@@ -95,14 +89,20 @@ public class HttpMetodsServerTest {
         // проверяем код ответа
         assertEquals(200, response.statusCode());
         Gson gson = HttpTaskServer.getBaseGson();
-        Set<Task> task_Json = gson.fromJson(response.body(),new TaskSetTypeToken().getType());
+        Set<Task> task_Json = gson.fromJson(response.body(), new TaskSetTypeToken().getType());
         // проверяем, что создалась одна задача с корректным именем
         Set<Task> task_history = (manager.getPrioritizedTasks());
         assertNotNull(task_Json, "Список приоритетов не возвращается");
         assertEquals(task_history.size(), task_Json.size(), "Список приоритетов отличается от фактического по колву");
-        assertEquals(task_Json.iterator().next().getName(),"task2" , "первый в списке приоритетов не корректный таск");
+        assertEquals(task_Json.iterator().next().getName(), "task2", "первый в списке приоритетов не корректный таск");
 
 
+    }
+
+    class TaskListTypeToken extends TypeToken<List<Task>> {
+    }
+
+    class TaskSetTypeToken extends TypeToken<Set<Task>> {
     }
 
 }

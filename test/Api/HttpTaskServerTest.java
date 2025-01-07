@@ -1,14 +1,13 @@
 package Api;
 
 import com.google.gson.Gson;
-import domain.Epic;
 import domain.Task;
 import domain.TaskStatus;
 import manager.FileBackedTaskManager;
 import manager.Managers;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URI;
@@ -94,7 +93,7 @@ public class HttpTaskServerTest {
         Gson gson = HttpTaskServer.getBaseGson();
         String taskJson = gson.toJson(task);
         // создаём HTTP-клиент и запрос
-        task.setId(task.getId()+1);
+        task.setId(task.getId() + 1);
         manager.addTask(task);
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks/");
@@ -109,6 +108,7 @@ public class HttpTaskServerTest {
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач, не сработа проверка на пересечение, задача ошибочно добавлена.");
 
     }
+
     @Test
     public void testDeleteTask() throws IOException, InterruptedException {
         // создаём задачу
@@ -118,7 +118,7 @@ public class HttpTaskServerTest {
         manager.addTask(task);
         manager.addTask(task2);
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks/"+task.getId());
+        URI url = URI.create("http://localhost:8080/tasks/" + task.getId());
         HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().build();
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -143,7 +143,7 @@ public class HttpTaskServerTest {
         manager.addTask(task2);
         // создаём HTTP-клиент и запрос
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks/"+task2.getId());
+        URI url = URI.create("http://localhost:8080/tasks/" + task2.getId());
         HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

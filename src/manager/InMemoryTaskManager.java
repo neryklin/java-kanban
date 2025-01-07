@@ -41,7 +41,7 @@ public class InMemoryTaskManager implements TaskManager {
         return busyInterval;
     }
 
-    public  List<Integer> addTaskToBusyPlan(Task task) {
+    public List<Integer> addTaskToBusyPlan(Task task) {
         List<Integer> crossingTask = getBusyIntreval(task);
         if (crossingTask.size() > 0) {
             crossingTask.stream()
@@ -270,7 +270,7 @@ public class InMemoryTaskManager implements TaskManager {
                 subtasklist.remove(id);
                 updateEpicStatus(teampEpic);
                 updateEpicTimeVariable(teampEpic);
-                teampEpic.removeSubtask(teampEpic,id);
+                teampEpic.removeSubtask(teampEpic, id);
             }
         }
         historyManager.remove(id);
@@ -285,8 +285,6 @@ public class InMemoryTaskManager implements TaskManager {
     public int[] getIntervalMapBusy() {
         return intervalMapBusy;
     }
-
-
 
 
 }

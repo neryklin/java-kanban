@@ -1,6 +1,8 @@
 package Api;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
@@ -30,8 +32,9 @@ public class HttpTaskServer {
     }
 
     public HttpTaskServer() {
-        this.taskManager  = Managers.getDefault();
+        this.taskManager = Managers.getDefault();
     }
+
     public static void httpTaskServerGetDefault() throws IOException {
         httpServer = HttpServer.create();
         httpServer.bind(new InetSocketAddress(PORT), 0);
@@ -42,6 +45,7 @@ public class HttpTaskServer {
         httpServer.createContext("/prioritized", new PrioritizedHandler());
 
     }
+
     public static Gson getBaseGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeNulls();
@@ -152,6 +156,25 @@ public class HttpTaskServer {
         System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
     }
 
+    public static void generateTestData() {
+
+        LocalDateTime o = LocalDateTime.of(2024, 01, 01, 00, 00);
+        Task task = new Task("fist task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.HOURS), LocalDateTime.now().minusDays(1));
+        Task task1 = new Task("second task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.HOURS), LocalDateTime.now().minusDays(3));
+        Task task2 = new Task("second  task", "paint red button", TaskStatus.NEW);
+        taskManager.addTask(task);
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        taskManager.getTaskFromId(2);
+
+        Epic epic3 = new Epic("third  epic", "third", TaskStatus.NEW);
+        Epic epic4 = new Epic("third  epic", "third", TaskStatus.NEW);
+        Subtask subtask4 = new Subtask("subtask 4", "TEST 2", TaskStatus.NEW);
+        taskManager.addEpicSubTask(epic3, subtask4);
+        taskManager.addEpic(epic3);
+        taskManager.addEpic(epic4);
+    }
+
     public FileBackedTaskManager getTaskManager() {
         return taskManager;
     }
@@ -160,14 +183,13 @@ public class HttpTaskServer {
         return httpServer;
     }
 
-    public void startHttp(){
+    public void startHttp() {
         httpServer.start();
     }
 
-    public void stopHttp(){
+    public void stopHttp() {
         httpServer.stop(1);
     }
-
 
     static class DurationAdapter extends TypeAdapter<Duration> {
         @Override
@@ -212,14 +234,15 @@ public class HttpTaskServer {
                     break;
                 }
                 case UNKNOWN: {
-                    super.sendNotFound(exchange,"Не известный запрос.");
+                    super.sendNotFound(exchange, "Не известный запрос.");
                     break;
                 }
             }
         }
+
         private void handleGetHistory(HttpExchange exchange) throws IOException {
             Gson gson = getBaseGson();
-            super.sendText(exchange, gson.toJson(taskManager.getHistoryManager().getHistory()),200);
+            super.sendText(exchange, gson.toJson(taskManager.getHistoryManager().getHistory()), 200);
         }
     }
 
@@ -234,9 +257,10 @@ public class HttpTaskServer {
                 }
             }
         }
+
         private void handleGetPrioritized(HttpExchange exchange) throws IOException {
             Gson gson = getBaseGson();
-            super.sendText(exchange, gson.toJson(taskManager.getPrioritizedTasks()),200);
+            super.sendText(exchange, gson.toJson(taskManager.getPrioritizedTasks()), 200);
         }
     }
 
@@ -263,7 +287,7 @@ public class HttpTaskServer {
                     break;
                 }
                 case UNKNOWN: {
-                    super.sendNotFound(exchange,"Не известный запрос.");
+                    super.sendNotFound(exchange, "Не известный запрос.");
                     break;
                 }
 
@@ -272,10 +296,9 @@ public class HttpTaskServer {
         }
 
 
-
         private void handleGetTasks(HttpExchange exchange) throws IOException {
             Gson gson = getBaseGson();
-            super.sendText(exchange, gson.toJson(taskManager.getTasksList()),200);
+            super.sendText(exchange, gson.toJson(taskManager.getTasksList()), 200);
         }
 
         private void handlePostTasks(HttpExchange exchange) throws IOException {
@@ -284,19 +307,19 @@ public class HttpTaskServer {
             String stringBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             Task tempTask = gson.fromJson(stringBody, Task.class);
             tempTask.calculateEndTime();
-            List<Integer> crossingTask  = taskManager.addTaskToBusyPlan(tempTask);
-            if (crossingTask.size()==0) {
+            List<Integer> crossingTask = taskManager.addTaskToBusyPlan(tempTask);
+            if (crossingTask.size() == 0) {
                 taskManager.addTask(tempTask);
                 tempTask.calculateEndTime();
             } else {
-                super.sendHasInteractions(exchange,"Такс не добавлен так как он пересекается"+gson.toJson(crossingTask));
+                super.sendHasInteractions(exchange, "Такс не добавлен так как он пересекается" + gson.toJson(crossingTask));
                 return;
             }
             if (taskOptinal.isEmpty()) {
                 //новый такс
-                    super.sendText(exchange, "Добвлан новый Таск " + tempTask.getId(),201);
+                super.sendText(exchange, "Добвлан новый Таск " + tempTask.getId(), 201);
             } else {
-                super.sendText(exchange, "Обновлен Таск " + tempTask.getId(),201);
+                super.sendText(exchange, "Обновлен Таск " + tempTask.getId(), 201);
             }
         }
 
@@ -308,7 +331,7 @@ public class HttpTaskServer {
                 super.sendNotFound(exchange, gson.toJson("Task с ID " + taskId + " не найден!"));
             } else {
                 taskManager.removeTaskFromId(taskId);
-                super.sendText(exchange, "Удален Таск " + taskId,200);
+                super.sendText(exchange, "Удален Таск " + taskId, 200);
             }
         }
 
@@ -321,14 +344,13 @@ public class HttpTaskServer {
                 int taskId = taskOptinal.get();
                 Task taskToSend = taskManager.getTaskFromId(taskId);
                 if (taskToSend != null) {
-                    super.sendText(exchange, gson.toJson(taskToSend),200);
+                    super.sendText(exchange, gson.toJson(taskToSend), 200);
                 } else {
                     super.sendNotFound(exchange, gson.toJson("Task с ID " + taskId + " не найден!"));
                 }
             }
         }
     }
-
 
     static class EpicHandler extends BaseHttpHandler {
         @Override
@@ -357,7 +379,7 @@ public class HttpTaskServer {
                     break;
                 }
                 case UNKNOWN: {
-                    super.sendNotFound(exchange,"Не известный запрос.");
+                    super.sendNotFound(exchange, "Не известный запрос.");
                     break;
                 }
 
@@ -367,7 +389,7 @@ public class HttpTaskServer {
 
         private void handleGetEpics(HttpExchange exchange) throws IOException {
             Gson gson = getBaseGson();
-            super.sendText(exchange, gson.toJson(taskManager.getEpicsList()),200);
+            super.sendText(exchange, gson.toJson(taskManager.getEpicsList()), 200);
         }
 
         private void handlePostEpics(HttpExchange exchange) throws IOException {
@@ -376,20 +398,20 @@ public class HttpTaskServer {
             String stringBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             Epic tempEpic = gson.fromJson(stringBody, Epic.class);
             tempEpic.calculateEndTime();
-            List<Integer> crossingTask  = taskManager.addTaskToBusyPlan(tempEpic);
-            if (crossingTask.size()==0) {
+            List<Integer> crossingTask = taskManager.addTaskToBusyPlan(tempEpic);
+            if (crossingTask.size() == 0) {
                 taskManager.addEpic(tempEpic);
                 tempEpic.calculateEndTime();
             } else {
-                super.sendHasInteractions(exchange,"Такс_не_добавлен_так_как_он_пересекается_c_таск(ми)_"+gson.toJson(crossingTask));
+                super.sendHasInteractions(exchange, "Такс_не_добавлен_так_как_он_пересекается_c_таск(ми)_" + gson.toJson(crossingTask));
                 return;
             }
             if (taskOptinal.isEmpty()) {
                 //новый такс
-                super.sendText(exchange, "Добавлан новый Epic " + tempEpic.getId(),201);
+                super.sendText(exchange, "Добавлан новый Epic " + tempEpic.getId(), 201);
             } else {
                 //обновляем имеющийся
-                super.sendText(exchange, "Обновлен Epic " + tempEpic.getId(),201);
+                super.sendText(exchange, "Обновлен Epic " + tempEpic.getId(), 201);
             }
         }
 
@@ -401,7 +423,7 @@ public class HttpTaskServer {
                 super.sendNotFound(exchange, gson.toJson("Epic с ID " + taskId + " не найден!"));
             } else {
                 taskManager.removeTaskFromId(taskId);
-                super.sendText(exchange, "Удален Epic " + taskId,200);
+                super.sendText(exchange, "Удален Epic " + taskId, 200);
             }
         }
 
@@ -414,7 +436,7 @@ public class HttpTaskServer {
                 int taskId = taskOptinal.get();
                 Task taskToSend = taskManager.getEpicFromId(taskId);
                 if (taskToSend != null) {
-                    super.sendText(exchange, gson.toJson(taskToSend),200);
+                    super.sendText(exchange, gson.toJson(taskToSend), 200);
                 } else {
                     super.sendNotFound(exchange, gson.toJson("Epics с ID " + taskId + " не найден!"));
                 }
@@ -430,14 +452,13 @@ public class HttpTaskServer {
                 int taskId = taskOptinal.get();
                 HashMap<Integer, Subtask> taskToSend = taskManager.getSubTasksListFromEpic(taskManager.getEpicFromId(taskId));
                 if (taskToSend != null) {
-                    super.sendText(exchange, gson.toJson(taskToSend),200);
+                    super.sendText(exchange, gson.toJson(taskToSend), 200);
                 } else {
                     super.sendNotFound(exchange, gson.toJson("Epics с ID " + taskId + " не найден!"));
                 }
             }
         }
     }
-
 
     static class SubtaskHandler extends BaseHttpHandler {
         @Override
@@ -462,7 +483,7 @@ public class HttpTaskServer {
                     break;
                 }
                 case UNKNOWN: {
-                    super.sendNotFound(exchange,"Не известный запрос.");
+                    super.sendNotFound(exchange, "Не известный запрос.");
                     break;
                 }
 
@@ -472,7 +493,7 @@ public class HttpTaskServer {
 
         private void handleGetSubtasks(HttpExchange exchange) throws IOException {
             Gson gson = getBaseGson();
-            super.sendText(exchange, gson.toJson(taskManager.getAllSubTasksList()),200);
+            super.sendText(exchange, gson.toJson(taskManager.getAllSubTasksList()), 200);
         }
 
         private void handlePostSubtasks(HttpExchange exchange) throws IOException {
@@ -481,21 +502,21 @@ public class HttpTaskServer {
             String stringBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             Subtask tempSubtask = gson.fromJson(stringBody, Subtask.class);
             tempSubtask.calculateEndTime();
-            List<Integer> crossingTask  = taskManager.addTaskToBusyPlan(tempSubtask);
-            if (crossingTask.size()==0) {
-                taskManager.addEpicIdSubTask(tempSubtask.getEpicTaskId(),tempSubtask);
+            List<Integer> crossingTask = taskManager.addTaskToBusyPlan(tempSubtask);
+            if (crossingTask.size() == 0) {
+                taskManager.addEpicIdSubTask(tempSubtask.getEpicTaskId(), tempSubtask);
                 tempSubtask.calculateEndTime();
                 tempSubtask.getEpic().calculateEndTime();
             } else {
-                super.sendHasInteractions(exchange,"Такс_не_добавлен_так_как_он_пересекается_c_таск(ми)_"+gson.toJson(crossingTask));
+                super.sendHasInteractions(exchange, "Такс_не_добавлен_так_как_он_пересекается_c_таск(ми)_" + gson.toJson(crossingTask));
                 return;
             }
             if (taskOptinal.isEmpty()) {
                 //новый такс
-                super.sendText(exchange, "Добавлан новый Subtask " + tempSubtask.getId(),201);
+                super.sendText(exchange, "Добавлан новый Subtask " + tempSubtask.getId(), 201);
             } else {
                 //обновляем имеющийся
-                super.sendText(exchange, "Обновлен Subtask " + tempSubtask.getId(),201);
+                super.sendText(exchange, "Обновлен Subtask " + tempSubtask.getId(), 201);
             }
         }
 
@@ -507,7 +528,7 @@ public class HttpTaskServer {
                 super.sendNotFound(exchange, gson.toJson("Subtask с ID " + taskId + " не найден!"));
             } else {
                 taskManager.removeTaskFromId(taskId);
-                super.sendText(exchange, "Удален Subtask " + taskId,200);
+                super.sendText(exchange, "Удален Subtask " + taskId, 200);
             }
         }
 
@@ -520,30 +541,11 @@ public class HttpTaskServer {
                 int taskId = taskOptinal.get();
                 Task taskToSend = taskManager.getSubtaskFromId(taskId);
                 if (taskToSend != null) {
-                    super.sendText(exchange, gson.toJson(taskToSend),200);
+                    super.sendText(exchange, gson.toJson(taskToSend), 200);
                 } else {
                     super.sendNotFound(exchange, gson.toJson("Subtasks с ID " + taskId + " не найден!"));
                 }
             }
         }
-    }
-
-    public static void generateTestData() {
-
-        LocalDateTime o = LocalDateTime.of(2024, 01, 01, 00, 00);
-        Task task = new Task("fist task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.HOURS), LocalDateTime.now().minusDays(1));
-        Task task1 = new Task("second task", "paint green button", TaskStatus.NEW, Duration.of(30, ChronoUnit.HOURS), LocalDateTime.now().minusDays(3));
-        Task task2 = new Task("second  task", "paint red button", TaskStatus.NEW);
-        taskManager.addTask(task);
-        taskManager.addTask(task1);
-        taskManager.addTask(task2);
-        taskManager.getTaskFromId(2);
-
-        Epic epic3 = new Epic("third  epic", "third", TaskStatus.NEW);
-        Epic epic4 = new Epic("third  epic", "third", TaskStatus.NEW);
-        Subtask subtask4 = new Subtask("subtask 4", "TEST 2", TaskStatus.NEW);
-        taskManager.addEpicSubTask(epic3, subtask4);
-        taskManager.addEpic(epic3);
-        taskManager.addEpic(epic4);
     }
 }

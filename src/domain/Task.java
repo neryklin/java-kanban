@@ -89,7 +89,7 @@ public class Task {
     }
 
     public void calculateEndTime() {
-        if (startTime!=null) {
+        if (startTime != null) {
             this.endTime = startTime.plus(duration);
         }
     }

@@ -1,16 +1,10 @@
 package Api;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import domain.Endpoint;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 public class BaseHttpHandler implements HttpHandler {
 
@@ -42,7 +36,6 @@ public class BaseHttpHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
 
     }
-
 
 
 }
