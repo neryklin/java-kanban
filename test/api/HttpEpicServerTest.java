@@ -1,4 +1,4 @@
-package Api;
+package api;
 
 import com.google.gson.Gson;
 import domain.Epic;
